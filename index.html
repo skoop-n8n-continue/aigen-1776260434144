@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Hydration Station</title>
+    <link rel="stylesheet" href="styles.css?v=w1b2b3">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="date-time">
+                <div id="current-time">00:00:00</div>
+                <div id="current-date">Monday, January 1</div>
+            </div>
+            <h1>HYDRATION STATION</h1>
+        </header>
+
+        <main>
+            <div class="visual-container">
+                <div class="bottle-wrapper">
+                    <img src="https://skoop-dev-code-agent.s3.us-east-1.amazonaws.com/skoop-n8n-continue%2Faigen-1776260434144%2Fassets%2Fwater_bottle_hero-1776322503959.png" alt="Water Bottle" class="hero-image">
+                    <div class="water-container">
+                        <div class="water-level" id="water-level">
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="stats-overlay">
+                    <div class="stat-card">
+                        <span class="label">Daily Goal</span>
+                        <span class="value">2.5L</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="label">Current</span>
+                        <span class="value" id="current-intake">1.8L</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="label">Progress</span>
+                        <span class="value" id="progress-percent">72%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <div class="tip-container">
+                    <h3>HYDRATION TIP</h3>
+                    <p id="hydration-tip">Drinking water helps maintain the balance of body fluids.</p>
+                </div>
+
+                <div class="bottle-types">
+                    <div class="type-tag">Glass</div>
+                    <div class="type-tag">Stainless Steel</div>
+                    <div class="type-tag">BPA-Free Plastic</div>
+                    <div class="type-tag">Copper</div>
+                    <div class="type-tag">Insulated</div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="scroll-container">
+                <div class="scroll-text">
+                    Stay Healthy • Drink More Water • Boost Your Energy • Improve Concentration • Stay Hydrated • Refresh Your Body • Water is Life • Drink Up! •
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="script.js?v=w1b2b3"></script>
+</body>
+</html>
