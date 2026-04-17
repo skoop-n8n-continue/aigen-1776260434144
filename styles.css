@@ -58,6 +58,8 @@ canvas {
     box-shadow: 0 8px 25px rgba(0,183,175,0.6);
     border: 3px solid var(--white);
     text-transform: uppercase;
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 @keyframes bounce {

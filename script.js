@@ -4,7 +4,7 @@
  */
 
 let scene, camera, renderer;
-let pitch, ball, bowler, batsman, bat;
+let pitch, ball, bowler, batsman, bat, stumps;
 let isBallInMotion = false;
 let isSwinging = false;
 let score = 142;
@@ -14,7 +14,7 @@ let balls = 112; // 18.4 overs
 const STADIUM_BG = 'https://skoop-dev-code-agent.s3.us-east-1.amazonaws.com/skoop-n8n-continue%2Faigen-1776260434144%2Fassets%2Fcricket_stadium_3d_background-1776411902249.png';
 
 function init() {
-    // Scene Setup
+    // ... scene setup remains same ...
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x10181f);
 
@@ -56,6 +56,30 @@ function init() {
     pitch = new THREE.Mesh(pitchGeo, pitchMat);
     pitch.position.y = -0.05;
     scene.add(pitch);
+
+    // Create Stumps
+    stumps = new THREE.Group();
+    const stumpGeo = new THREE.CylinderGeometry(0.05, 0.05, 1.2, 8);
+    const stumpMat = new THREE.MeshStandardMaterial({ color: 0xeeeeee });
+    for (let i = -1; i <= 1; i++) {
+        const stump = new THREE.Mesh(stumpGeo, stumpMat);
+        stump.position.x = i * 0.2;
+        stump.position.y = 0.6;
+        stumps.add(stump);
+    }
+    // Bails
+    const bailGeo = new THREE.CylinderGeometry(0.02, 0.02, 0.45, 8);
+    const bail1 = new THREE.Mesh(bailGeo, stumpMat);
+    bail1.position.set(-0.1, 1.22, 0);
+    bail1.rotation.z = Math.PI / 2;
+    stumps.add(bail1);
+    const bail2 = new THREE.Mesh(bailGeo, stumpMat);
+    bail2.position.set(0.1, 1.22, 0);
+    bail2.rotation.z = Math.PI / 2;
+    stumps.add(bail2);
+
+    stumps.position.z = -12;
+    scene.add(stumps);
 
     // Create Ball
     const ballGeo = new THREE.SphereGeometry(0.15, 32, 32);
@@ -184,9 +208,10 @@ function bowlBall() {
     if (isBallInMotion) return;
 
     isBallInMotion = true;
+    const speed = 800 + Math.random() * 800; // Variable speed between 800ms and 1600ms
     document.getElementById('last-ball').textContent = "BOWLING...";
     const startTime = Date.now();
-    const duration = 1200; // Faster delivery for challenge
+    const duration = speed;
 
     function moveBall() {
         const elapsed = Date.now() - startTime;
@@ -194,16 +219,22 @@ function bowlBall() {
 
         if (progress < 1) {
             // Path towards batsman
-            ball.position.z = 12 - (progress * 22);
+            ball.position.z = 12 - (progress * 25);
             // Bounce
             ball.position.y = 1 + Math.abs(Math.sin(progress * Math.PI * 1.5)) * 1.5;
 
             // Camera follows ball slightly
             camera.lookAt(ball.position.x, ball.position.y, ball.position.z);
 
-            // Check for hit
+            // Check for hit (strike zone -8 to -11)
             if (isSwinging && ball.position.z < -8 && ball.position.z > -11) {
                 hitBall();
+                return;
+            }
+
+            // Check for bowled (hits stumps at -12)
+            if (ball.position.z <= -11.8 && ball.position.z >= -12.2 && Math.abs(ball.position.x) < 0.4 && ball.position.y < 1.3) {
+                bowledOut();
                 return;
             }
 
@@ -219,16 +250,48 @@ function bowlBall() {
     moveBall();
 }
 
+function bowledOut() {
+    wickets++;
+    document.getElementById('last-ball').textContent = "BOWLED! WICKET!!";
+
+    // Animate stumps falling
+    const startTime = Date.now();
+    const duration = 1000;
+    const startRot = stumps.rotation.x;
+
+    function animateWicket() {
+        const elapsed = Date.now() - startTime;
+        const progress = elapsed / duration;
+        if (progress < 1) {
+            stumps.rotation.x = startRot + (progress * Math.PI / 4);
+            stumps.position.y = -progress * 0.2;
+            requestAnimationFrame(animateWicket);
+        } else {
+            updateScore(0);
+            setTimeout(() => {
+                stumps.rotation.x = 0;
+                stumps.position.y = 0;
+                resetBall();
+                startBowlingCycle();
+            }, 1000);
+        }
+    }
+    animateWicket();
+}
+
 function hitBall() {
     // Quality of hit depends on timing? For now random but successful
     const runs = [1, 2, 4, 6][Math.floor(Math.random() * 4)];
     document.getElementById('last-ball').textContent = `CRACK! ${runs} RUNS!`;
 
+    // Camera Shake
+    applyCameraShake();
+
     // Animate ball flying away
     const startTime = Date.now();
     const duration = 2000;
-    const dirX = (Math.random() - 0.5) * 20;
-    const dirY = 5 + Math.random() * 10;
+    const dirX = (Math.random() - 0.5) * 30;
+    const dirY = 5 + Math.random() * 15;
     const startPos = ball.position.clone();
 
     function flyBall() {
@@ -236,7 +299,7 @@ function hitBall() {
         const progress = elapsed / duration;
 
         if (progress < 1) {
-            ball.position.z = startPos.z - (progress * 60);
+            ball.position.z = startPos.z - (progress * 80);
             ball.position.x = startPos.x + (progress * dirX);
             ball.position.y = startPos.y + Math.sin(progress * Math.PI) * dirY;
             requestAnimationFrame(flyBall);
@@ -252,6 +315,24 @@ function hitBall() {
     flyBall();
 }
 
+function applyCameraShake() {
+    const originalPos = camera.position.clone();
+    const startTime = Date.now();
+    const duration = 200;
+
+    function shake() {
+        const elapsed = Date.now() - startTime;
+        if (elapsed < duration) {
+            camera.position.x = originalPos.x + (Math.random() - 0.5) * 0.5;
+            camera.position.y = originalPos.y + (Math.random() - 0.5) * 0.5;
+            requestAnimationFrame(shake);
+        } else {
+            camera.position.copy(originalPos);
+        }
+    }
+    shake();
+}
+
 function updateScore(runs) {
     score += runs;
     balls++;
@@ -260,6 +341,18 @@ function updateScore(runs) {
 
     document.getElementById('score').textContent = `${score}/${wickets}`;
     document.getElementById('overs').textContent = `${overs}.${overBalls} OVERS`;
+
+    // Update ticker message randomly
+    const messages = [
+        `STRIKERS NEED ${165 - score} RUNS FROM ${120 - balls} BALLS!`,
+        `WHAT A SHOT! THE CROWD IS ELECTRIC!`,
+        `CRICKET FEVER AT SKOOP ARENA!`,
+        `CAN THEY REACH THE TARGET OF 165?`,
+        `BOWLER IS UNDER PRESSURE NOW!`
+    ];
+    if (runs > 0) {
+        document.querySelector('.ticker-content').textContent = messages[Math.floor(Math.random() * messages.length)] + " • " + document.querySelector('.ticker-content').textContent;
+    }
 }
 
 function animate() {
