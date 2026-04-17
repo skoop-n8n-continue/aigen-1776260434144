@@ -8,7 +8,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Skoop Cricket 3D</title>
-    <link rel="stylesheet" href="styles.css?v=c1r2k3">
+    <link rel="stylesheet" href="styles.css?v=i2n3t4">
     <!-- Load Three.js from CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
@@ -30,9 +30,11 @@
             </div>
 
             <div class="live-status">
-                <div class="status-badge">LIVE SIMULATION</div>
-                <div class="last-ball" id="last-ball">LAST BALL: 4 RUNS</div>
+                <div class="status-badge">INTERACTIVE PLAY</div>
+                <div class="last-ball" id="last-ball">WAITING FOR BOWLER...</div>
             </div>
+
+            <button class="interaction-hint" id="swing-btn">TAP TO SWING</button>
 
             <div class="ticker">
                 <div class="ticker-content">
@@ -42,7 +44,7 @@
         </div>
     </div>
 
-    <script src="script.js?v=c1r2k3"></script>
+    <script src="script.js?v=i2n3t4"></script>
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', function () {

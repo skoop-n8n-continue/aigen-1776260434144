@@ -3,7 +3,8 @@
 A professional cricket match simulation designed for digital signage. This app features a 3D view of a cricket stadium with live match data simulation, including scores, overs, and last ball results.
 
 ## Features
-- **3D Match Simulation**: Real-time rendering of bowling and batting actions using Three.js.
+- **3D Interactive Gameplay**: Real-time rendering of bowling and batting actions using Three.js. Users can now control the batsman to hit the ball!
+- **Interactive Batsman**: Tap the screen or press **Spacebar** to swing the bat and score runs.
 - **Cinematic Visuals**: AI-generated high-quality stadium background with neon teal accents.
 - **Live Scoreboard**: Dynamic scoreboard tracking runs, wickets, and overs.
 - **Ticker Tape**: Animated news ticker with match updates and player stats.
