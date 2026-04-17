@@ -1,85 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="manifest" href="./manifest.json">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Hydration Station</title>
-    <link rel="stylesheet" href="styles.css?v=w1b2b3">
+    <title>Skoop Cricket 3D</title>
+    <link rel="stylesheet" href="styles.css?v=c1r2k3">
+    <!-- Load Three.js from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <header>
-            <div class="date-time">
-                <div id="current-time">00:00:00</div>
-                <div id="current-date">Monday, January 1</div>
-            </div>
-            <h1>HYDRATION STATION</h1>
-        </header>
+    <div id="app">
+        <!-- 3D Canvas will be injected here -->
 
-        <main>
-            <div class="visual-container">
-                <div class="bottle-wrapper">
-                    <img src="https://skoop-dev-code-agent.s3.us-east-1.amazonaws.com/skoop-n8n-continue%2Faigen-1776260434144%2Fassets%2Fwater_bottle_hero-1776322503959.png" alt="Water Bottle" class="hero-image">
-                    <div class="water-container">
-                        <div class="water-level" id="water-level">
-                            <div class="wave"></div>
-                            <div class="wave"></div>
-                        </div>
-                    </div>
+        <!-- UI Overlay -->
+        <div id="ui-layer">
+            <div class="scoreboard">
+                <div class="team-info">
+                    <span class="team-name">SKOOP STRIKERS</span>
+                    <span class="score" id="score">142/3</span>
                 </div>
-                <div class="stats-overlay">
-                    <div class="stat-card">
-                        <span class="label">Daily Goal</span>
-                        <span class="value">2.5L</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="label">Current</span>
-                        <span class="value" id="current-intake">1.8L</span>
-                    </div>
-                    <div class="stat-card">
-                        <span class="label">Progress</span>
-                        <span class="value" id="progress-percent">72%</span>
-                    </div>
+                <div class="match-info">
+                    <span id="overs">18.4 OVERS</span>
+                    <span class="target">TARGET: 165</span>
                 </div>
             </div>
 
-            <div class="info-section">
-                <div class="tip-container">
-                    <h3>HYDRATION TIP</h3>
-                    <p id="hydration-tip">Drinking water helps maintain the balance of body fluids.</p>
-                </div>
+            <div class="live-status">
+                <div class="status-badge">LIVE SIMULATION</div>
+                <div class="last-ball" id="last-ball">LAST BALL: 4 RUNS</div>
+            </div>
 
-                <div class="bottle-types">
-                    <div class="type-tag">Glass</div>
-                    <div class="type-tag">Stainless Steel</div>
-                    <div class="type-tag">BPA-Free Plastic</div>
-                    <div class="type-tag">Copper</div>
-                    <div class="type-tag">Insulated</div>
+            <div class="ticker">
+                <div class="ticker-content">
+                    STRIKERS NEED 23 RUNS FROM 8 BALLS • MAXWELL ON 45(22) • KOHLI BOWLING HIS 4TH OVER • THE CROWD IS GOING WILD AT THE SKOOP ARENA! •
                 </div>
             </div>
-        </main>
-
-        <footer>
-            <div class="scroll-container">
-                <div class="scroll-text">
-                    Stay Healthy • Drink More Water • Boost Your Energy • Improve Concentration • Stay Hydrated • Refresh Your Body • Water is Life • Drink Up! •
-                </div>
-            </div>
-        </footer>
+        </div>
     </div>
-    <script src="script.js?v=w1b2b3"></script>
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
-        navigator.serviceWorker.register('./sw.js')
-          .then(function (reg) { console.log('[PWA] SW registered:', reg.scope); })
-          .catch(function (err) { console.warn('[PWA] SW registration failed:', err); });
-      });
-    }
-  </script>
+
+    <script src="script.js?v=c1r2k3"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(function (reg) { console.log('[PWA] SW registered:', reg.scope); })
+                    .catch(function (err) { console.warn('[PWA] SW registration failed:', err); });
+            });
+        }
+    </script>
 </body>
 </html>
