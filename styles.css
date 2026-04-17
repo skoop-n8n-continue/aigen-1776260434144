@@ -51,15 +51,12 @@ canvas {
     transform: translateX(-50%);
     background: var(--primary-teal);
     color: var(--dark-bg);
-    padding: 10px 30px;
+    padding: 15px 45px;
     border-radius: 50px;
-    font-weight: 800;
-    font-size: 1.2rem;
-    box-shadow: 0 5px 15px rgba(0,183,175,0.4);
-    animation: bounce 2s infinite;
-    pointer-events: auto;
-    cursor: pointer;
-    border: none;
+    font-weight: 900;
+    font-size: 1.5rem;
+    box-shadow: 0 8px 25px rgba(0,183,175,0.6);
+    border: 3px solid var(--white);
     text-transform: uppercase;
 }
 

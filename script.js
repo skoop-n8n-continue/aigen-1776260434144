@@ -20,8 +20,8 @@ function init() {
 
     // Camera Setup
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.set(0, 5, 20);
-    camera.lookAt(0, 0, 0);
+    camera.position.set(0, 3, 10);
+    camera.lookAt(0, 1, -10);
 
     // Renderer Setup
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -65,28 +65,73 @@ function init() {
     scene.add(ball);
 
     // Create Players
-    const playerGeo = new THREE.CylinderGeometry(0.3, 0.3, 1.8, 16);
     const playerMat = new THREE.MeshStandardMaterial({ color: 0x00b7af });
+    const skinMat = new THREE.MeshStandardMaterial({ color: 0xffdbac });
+    const batMat = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
 
-    bowler = new THREE.Mesh(playerGeo, playerMat);
+    // Bowler
+    bowler = new THREE.Group();
+    const bowlerBody = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 1.8, 16), playerMat);
+    const bowlerHead = new THREE.Mesh(new THREE.SphereGeometry(0.25, 16, 16), skinMat);
+    bowlerHead.position.y = 1.1;
+    bowler.add(bowlerBody);
+    bowler.add(bowlerHead);
     bowler.position.set(0, 0.9, 12);
     scene.add(bowler);
 
     // Group for Batsman and Bat
     batsman = new THREE.Group();
-    const body = new THREE.Mesh(playerGeo, playerMat);
+
+    // Batsman Body
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 1.6, 16), playerMat);
+    body.position.y = 0.8;
     batsman.add(body);
 
+    // Batsman Head
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.25, 16, 16), skinMat);
+    head.position.y = 1.8;
+    batsman.add(head);
+
+    // Batsman Arms (simple)
+    const armGeo = new THREE.CylinderGeometry(0.1, 0.1, 0.8, 8);
+    const leftArm = new THREE.Mesh(armGeo, playerMat);
+    leftArm.position.set(-0.4, 1.2, 0);
+    leftArm.rotation.z = Math.PI / 4;
+    batsman.add(leftArm);
+
+    const rightArm = new THREE.Mesh(armGeo, playerMat);
+    rightArm.position.set(0.4, 1.2, 0.2);
+    rightArm.rotation.x = -Math.PI / 4;
+    batsman.add(rightArm);
+
     // Add Bat
-    const batGeo = new THREE.BoxGeometry(0.1, 1.2, 0.2);
-    const batMat = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
-    bat = new THREE.Mesh(batGeo, batMat);
-    bat.position.set(0.4, 0, 0.2);
-    bat.rotation.x = Math.PI / 8;
+    const batGroup = new THREE.Group();
+
+    // Bat Blade
+    const bladeGeo = new THREE.BoxGeometry(0.25, 1.0, 0.1);
+    const blade = new THREE.Mesh(bladeGeo, batMat);
+    blade.position.y = -0.5;
+    batGroup.add(blade);
+
+    // Bat Handle
+    const handleGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.5, 8);
+    const handleMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
+    const handle = new THREE.Mesh(handleGeo, handleMat);
+    handle.position.y = 0.25;
+    batGroup.add(handle);
+
+    bat = batGroup;
+    bat.position.set(0.6, 0.8, 0.3);
+    bat.rotation.x = Math.PI / 6;
     batsman.add(bat);
 
-    batsman.position.set(0, 0.9, -10);
+    batsman.position.set(-0.6, 0, -10);
     scene.add(batsman);
+
+    // Additional light for batsman
+    const batLight = new THREE.PointLight(0xffffff, 1.5, 15);
+    batLight.position.set(0, 5, -8);
+    scene.add(batLight);
 
     // Event Listeners
     document.getElementById('swing-btn').addEventListener('click', swing);
@@ -153,6 +198,9 @@ function bowlBall() {
             // Bounce
             ball.position.y = 1 + Math.abs(Math.sin(progress * Math.PI * 1.5)) * 1.5;
 
+            // Camera follows ball slightly
+            camera.lookAt(ball.position.x, ball.position.y, ball.position.z);
+
             // Check for hit
             if (isSwinging && ball.position.z < -8 && ball.position.z > -11) {
                 hitBall();
@@ -217,10 +265,13 @@ function updateScore(runs) {
 function animate() {
     requestAnimationFrame(animate);
 
-    // Dynamic Camera
+    // Dynamic Camera - slightly moving to keep it interesting
     const time = Date.now() * 0.0005;
-    camera.position.x = Math.sin(time * 0.5) * 3;
-    camera.lookAt(0, 2, -5);
+    if (!isBallInMotion) {
+        camera.position.x = Math.sin(time * 0.3) * 2;
+        camera.position.y = 3 + Math.cos(time * 0.2) * 0.5;
+        camera.lookAt(0, 1.5, -10);
+    }
 
     renderer.render(scene, camera);
 }
